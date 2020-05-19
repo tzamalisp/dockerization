@@ -1,0 +1,3 @@
+FROM ubuntu
+MAINTAINER jmp
+ENTRYPOINT ["echo"]
