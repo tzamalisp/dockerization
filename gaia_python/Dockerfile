@@ -58,5 +58,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY requirements_development.txt requirements_development.txt
 RUN pip install --no-cache-dir -r requirements_development.txt
 
-# CMD ["python", "-m", "gaia2.scripts.classification.train_model_from_sigs"]
-CMD ["python"]
+CMD ["python", "-m", "gaia2.scripts.classification.train_model_from_sigs"]
+# CMD ["python"]
