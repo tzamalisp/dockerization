@@ -69,7 +69,6 @@ RUN pip install --no-cache-dir -r requirements_development.txt
 
 ADD acousticbrainz-datasets acousticbrainz-datasets
 RUN mkdir model_save
-ADD classification_project_jmp.yaml /
 
 # CMD ["python", "-m", "gaia2.scripts.classification.train_model"]
 # CMD ["python"]
