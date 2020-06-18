@@ -1,16 +1,19 @@
-FROM metabrainz/python:2.7 AS gaiajmp
+# FROM metabrainz/python:2.7 AS gaiajmp
+FROM ubuntu:16.04
 
 # Dockerize
-ENV DOCKERIZE_VERSION v0.6.1
-RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
-    && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+# ENV DOCKERIZE_VERSION v0.6.1
+# RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+#    && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
 # Install dependencies
 # Hadolint DL4006
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+# SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # Node
-RUN wget -q -O - https://deb.nodesource.com/setup_12.x | bash - && apt-get update \
+# RUN wget -q -O - https://deb.nodesource.com/setup_12.x | bash - && apt-get update \
+RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+                      python-pip \
                        build-essential \
                        ca-certificates \
                        git \
@@ -34,12 +37,18 @@ RUN wget -q -O - https://deb.nodesource.com/setup_12.x | bash - && apt-get updat
                        python-dev \
                        python-numpy-dev \
                        python-numpy \
-                       swig2.0 \
+                       libpcre3-dev \
+                       python-setuptools \
     && rm -rf /var/lib/apt/lists/*
 
-# RUN mkdir /code
-# RUN mkdir /data
-# WORKDIR /code
+# download swig 3.0.12
+ADD swig-3.0.12 swig-3.0.12
+RUN cd swig-3.0.12 \
+  && ./configure --prefix=/usr \
+  && make -j 4 \
+  && make install \
+  && swig -version
+
 
 # Gaia
 # See https://github.com/MTG/gaia
@@ -58,5 +67,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY requirements_development.txt requirements_development.txt
 RUN pip install --no-cache-dir -r requirements_development.txt
 
-CMD ["python", "-m", "gaia2.scripts.classification.train_model_from_sigs"]
+ADD acousticbrainz-datasets acousticbrainz-datasets
+RUN mkdir model_save
+ADD classification_project_jmp.yaml /
+
+# CMD ["python", "-m", "gaia2.scripts.classification.train_model"]
 # CMD ["python"]
