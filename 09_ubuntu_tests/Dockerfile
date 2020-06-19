@@ -9,6 +9,6 @@ RUN apt-get update \
     python3-numpy-dev \
    	python3-numpy
 
-# RUN ln -s /usr/bin/python3 /usr/bin/python
+RUN ln -sf /usr/bin/python3 /usr/bin/python
 
 # CMD ["python"]
