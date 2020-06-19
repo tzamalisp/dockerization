@@ -10,5 +10,6 @@ RUN apt-get update \
    	python3-numpy
 
 RUN ln -sf /usr/bin/python3 /usr/bin/python
+RUN ln -sf /usr/bin/pip3 /usr/bin/pip
 
 # CMD ["python"]
